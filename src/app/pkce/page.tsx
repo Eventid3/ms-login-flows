@@ -1,5 +1,5 @@
 
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import {
@@ -10,11 +10,6 @@ import {
 } from '@azure/msal-browser';
 
 export default function Pkce() {
-    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-    const [account, setAccount] = useState<AccountInfo | null>(null);
-    const [tokenData, setTokenData] = useState<AuthenticationResult | null>(null);
-    const [error, setError] = useState<string | null>(null);
-
     // MSAL configuration
     const msalConfig = {
         auth: {
@@ -28,35 +23,41 @@ export default function Pkce() {
         }
     };
 
+    const [msalInstance] = useState(() => new PublicClientApplication(msalConfig));
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    const [account, setAccount] = useState<AccountInfo | null>(null);
+    const [tokenData, setTokenData] = useState<AuthenticationResult | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
     // Scopes for the token request
     const loginScopes = (process.env.NEXT_PUBLIC_SCOPES || '').split(' ');
 
-    // Initialize MSAL instance
-    const msalInstance = new PublicClientApplication(msalConfig);
-
     useEffect(() => {
-        // Handle the redirect promise when the page loads
-        msalInstance.handleRedirectPromise()
-            .then(response => {
-                // Check if response is null (no redirect) or contains auth result
-                if (response !== null) {
-                    setTokenData(response);
-                    setAccount(response.account);
-                    setIsAuthenticated(true);
-                } else {
-                    // Check if user is already signed in
-                    const currentAccounts = msalInstance.getAllAccounts();
-                    if (currentAccounts.length > 0) {
-                        setAccount(currentAccounts[0]);
-                        setIsAuthenticated(true);
-                        // Get token silently if user is already signed in
-                        acquireToken();
-                    }
-                }
-            })
-            .catch(error => {
-                console.error("Error during redirect handling:", error);
-                setError(error.message);
+        msalInstance.initialize()
+            .then(() => {
+                // Handle the redirect promise when the page loads
+                msalInstance.handleRedirectPromise()
+                    .then(response => {
+                        // Check if response is null (no redirect) or contains auth result
+                        if (response !== null) {
+                            setTokenData(response);
+                            setAccount(response.account);
+                            setIsAuthenticated(true);
+                        } else {
+                            // Check if user is already signed in
+                            const currentAccounts = msalInstance.getAllAccounts();
+                            if (currentAccounts.length > 0) {
+                                setAccount(currentAccounts[0]);
+                                setIsAuthenticated(true);
+                                // Get token silently if user is already signed in
+                                acquireToken();
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error during redirect handling:", error);
+                        setError(error.message);
+                    });
             });
     }, []);
 
@@ -78,8 +79,7 @@ export default function Pkce() {
             if (error instanceof InteractionRequiredAuthError) {
                 // fallback to interaction when silent call fails
                 try {
-                    const response = await msalInstance.acquireTokenRedirect(request);
-                    setTokenData(response);
+                    await msalInstance.acquireTokenRedirect(request);
                 } catch (interactiveError) {
                     console.error("Error during interactive token acquisition:", interactiveError);
                     setError(interactiveError.message);

@@ -18,8 +18,8 @@ export async function GET(request: NextRequest) {
     // Get the authorization code from the query parameters
     const url = new URL(request.url);
     const code = url.searchParams.get('code');
-    const state = url.searchParams.get('state');
-
+    console.log(url.searchParams)
+    url.searchParams.get('state');
     if (!code) {
       return NextResponse.json({ error: 'No authorization code provided' }, { status: 400 });
     }
@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
     const tokenRequest = {
       code: code,
       scopes: (process.env.NEXT_PUBLIC_SCOPES || '').split(' '),
-      redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI,
+      redirectUri: process.env.NEXT_PUBLIC_REDIRECT_URI as string,
     };
 
     const tokenResponse = await cca.acquireTokenByCode(tokenRequest);
