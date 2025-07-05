@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Microsoft Login Flows Test Application
 
-## Getting Started
+This Next.js application demonstrates two different authentication flows with Microsoft Entra ID (formerly Azure AD):
 
-First, run the development server:
+1. **PKCE Flow** - For public clients like single-page applications
+2. **Web Flow** - For confidential clients like web applications with a backend
+
+## Overview
+
+This application allows you to test Microsoft Entra ID authentication flows with your own Azure applications. It provides:
+
+- A home page displaying your configuration values
+- A PKCE page implementing the PKCE (Proof Key for Code Exchange) authentication flow
+- A Web page implementing the Web authentication flow with server-side code
+- Display of token information after successful authentication
+
+## Setup
+
+### Prerequisites
+
+- Node.js and npm installed
+- A Microsoft Entra ID (Azure AD) application registered in the Azure portal
+
+### Environment Variables
+
+Create a `.env` file in the root directory with the following variables:
+
+```
+# Microsoft Entra ID (Azure AD) Configuration
+NEXT_PUBLIC_CLIENT_ID=your-client-id
+NEXT_PUBLIC_TENANT_ID=your-tenant-id
+CLIENT_SECRET=your-client-secret
+NEXT_PUBLIC_REDIRECT_URI=http://localhost:3000/api/auth/redirect
+NEXT_PUBLIC_AUTHORITY=https://login.microsoftonline.com/
+NEXT_PUBLIC_SCOPES=openid profile email
+```
+
+Replace the placeholder values with your actual Microsoft Entra ID application details.
+
+### Installation
+
+1. Clone the repository
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Authentication Flows
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### PKCE Flow
+
+The PKCE (Proof Key for Code Exchange) flow is designed for public clients like single-page applications. It provides additional security for the authorization code flow by using a code verifier and code challenge.
+
+To test the PKCE flow:
+
+1. Navigate to the PKCE page at [http://localhost:3000/pkce](http://localhost:3000/pkce)
+2. Click the "Sign in with Microsoft" button
+3. Complete the authentication process
+4. View the token information displayed on the page
+
+This flow is implemented using the `@azure/msal-browser` package and runs entirely in the browser.
+
+### Web Flow
+
+The Web flow is designed for confidential clients like web applications with a backend. It uses server-side code to securely handle the client secret.
+
+To test the Web flow:
+
+1. Navigate to the Web page at [http://localhost:3000/web](http://localhost:3000/web)
+2. Click the "Sign in with Microsoft (Web Flow)" button
+3. Complete the authentication process
+4. View the token information displayed on the page
+
+This flow is implemented using the `@azure/msal-node` package for server-side authentication and API routes in Next.js.
+
+## Azure Portal Configuration
+
+To use this application with your own Microsoft Entra ID application:
+
+1. Register a new application in the Azure portal
+2. Configure the redirect URIs:
+   - For PKCE flow: `http://localhost:3000`
+   - For Web flow: `http://localhost:3000/api/auth/redirect`
+3. Generate a client secret (for the Web flow)
+4. Update your `.env` file with the application details
 
 ## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [Microsoft Authentication Library (MSAL) Documentation](https://docs.microsoft.com/en-us/azure/active-directory/develop/msal-overview)
+- [Microsoft Entra ID Documentation](https://docs.microsoft.com/en-us/azure/active-directory/)
+- [Next.js Documentation](https://nextjs.org/docs)
