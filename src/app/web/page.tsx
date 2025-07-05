@@ -97,29 +97,29 @@ export default function Web() {
                     <div className="space-y-4">
                         <div>
                             <p className="font-medium">Access Token:</p>
-                            <p className="bg-white p-2 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                            <p className="bg-white text-black p-2 rounded border overflow-x-auto whitespace-pre-wrap break-all">
                                 {tokenData.accessToken}
                             </p>
                         </div>
                         <div>
                             <p className="font-medium">ID Token:</p>
-                            <p className="bg-white p-2 rounded border overflow-x-auto whitespace-pre-wrap break-all">
+                            <p className="bg-white text-black p-2 rounded border overflow-x-auto whitespace-pre-wrap break-all">
                                 {tokenData.idToken}
                             </p>
                         </div>
                         <div>
                             <p className="font-medium">Token Type:</p>
-                            <p className="bg-white p-2 rounded border">{tokenData.tokenType}</p>
+                            <p className="bg-white text-black p-2 rounded border">{tokenData.tokenType}</p>
                         </div>
                         <div>
                             <p className="font-medium">Expires:</p>
-                            <p className="bg-white p-2 rounded border">
+                            <p className="bg-white text-black p-2 rounded border">
                                 {new Date(tokenData.expiresOn).toLocaleString()}
                             </p>
                         </div>
                         <div>
                             <p className="font-medium">Account Information:</p>
-                            <div className="bg-white p-2 rounded border">
+                            <div className="bg-white text-black p-2 rounded border">
                                 <p><strong>Username:</strong> {tokenData.account?.username}</p>
                                 <p><strong>Tenant ID:</strong> {tokenData.account?.tenantId}</p>
                                 <p><strong>Home Account ID:</strong> {tokenData.account?.homeAccountId}</p>

@@ -30,7 +30,7 @@ Create a `.env` file in the root directory with the following variables:
 NEXT_PUBLIC_CLIENT_ID=your-client-id
 NEXT_PUBLIC_TENANT_ID=your-tenant-id
 CLIENT_SECRET=your-client-secret
-NEXT_PUBLIC_REDIRECT_URI=http://localhost:3000/api/auth/redirect
+NEXT_PUBLIC_REDIRECT_URI=http://localhost:3000/.auth/login/aad/callback
 NEXT_PUBLIC_AUTHORITY=https://login.microsoftonline.com/
 NEXT_PUBLIC_SCOPES=openid profile email
 ```
@@ -89,7 +89,7 @@ To use this application with your own Microsoft Entra ID application:
 1. Register a new application in the Azure portal
 2. Configure the redirect URIs:
    - For PKCE flow: `http://localhost:3000`
-   - For Web flow: `http://localhost:3000/api/auth/redirect`
+   - For Web flow: `http://localhost:3000/.auth/login/aad/callback`
 3. Generate a client secret (for the Web flow)
 4. Update your `.env` file with the application details
 
